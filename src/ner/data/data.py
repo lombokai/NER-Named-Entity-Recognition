@@ -59,48 +59,26 @@ class NERDataset(Dataset):
         return vocab
 
     def encode(self, tokens, vocab):
-        return [vocab[token] for token in tokens]
+        return [vocab.get(token, vocab["<unk>"]) for token in tokens]
     
     def _get_mapper(self):
         sentences = []
         ner_outputs = []
 
-        # print(self.data)
-
-        for i in range(len(self.data)):
-            token = self.data[i]["tokens"]
-            out = self.data[i]["ner_outputs"]
-            sentences.extend(token)
-            ner_outputs.extend(out)
-
-        # sentences = [data["tokens"] for data in self.data]
-        # ner_outputs = [data["ner_outputs"] for data in self.data]
+        for data in self.data:
+            sentences.extend(data["tokens"])
+            ner_outputs.extend(data["ner_outputs"])
 
         self.vocab = self.build_vocab(sentences, specials=["<unk>", "<pad>"])
-        self.ner_vocab = self.build_vocab(ner_outputs)
+        self.ner_vocab = self.build_vocab(ner_outputs, specials=["<unk>", "<pad>"])
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
         
-        # for i in range(len(self.data)):
-        list_token = self.encode(self.data[idx]["tokens"], self.vocab)
-        list_ner = self.encode(self.data[idx]["ner_outputs"], self.ner_vocab)
-        self.data[idx]["tokens"] = list_token
-        self.data[idx]["ner_outputs"] = list_ner
+        token = torch.tensor(self.encode(self.data[idx]["tokens"], self.vocab), dtype=torch.long)
+        target = torch.tensor(self.encode(self.data[idx]["ner_outputs"], self.ner_vocab), dtype=torch.long)
 
-        batch_tokens = []
-        batch_target = []
-
-        # for i in range(len(self.data)):
-        token = torch.tensor(self.data[idx]["tokens"], dtype=torch.long)
-        target = torch.tensor(self.data[idx]["ner_outputs"], dtype=torch.long)
-        batch_tokens.append(token)
-        batch_target.append(target)
-
-        batch_tokens = pad_sequence(batch_tokens, batch_first=True, padding_value=self.vocab["<pad>"])
-        batch_target = pad_sequence(batch_target, batch_first=True, padding_value=1)
-
-        return batch_tokens, batch_target
+        return token, target
         
