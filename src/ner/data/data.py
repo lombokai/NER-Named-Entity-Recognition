@@ -58,11 +58,11 @@ class ConllDataset(Dataset):
     def __getitem__(self, idx):
         sample = self.data[idx]
 
-        token = self.token_manager.encode(sample["tokens"])
-        ner_tags = self.ner_manager.encode(sample["ner_outputs"])
+        token = self.token_manager.encode(sample["tokens"], is_token=True)
+        ner_tags = self.ner_manager.encode(sample["ner_outputs"], is_token=False)
 
-        token = self._pad_sequence(token, self.token_manager.vocab["<pad>"])
-        ner_tags = self._pad_sequence(ner_tags, self.ner_manager.vocab["<pad>"])        
+        token = self._pad_sequence(token, self.token_manager.token_vocab["<pad>"])
+        ner_tags = self._pad_sequence(ner_tags, self.ner_manager.output_vocab["<pad>"])        
         
         return torch.tensor(token, dtype=torch.long), torch.tensor(ner_tags, dtype=torch.long)
         
@@ -93,8 +93,10 @@ class ConllDataModule(L.LightningDataModule):
             self.max_len
         )
 
-        token_manager.build_vocab(self.train_dataset.data, is_token=True)
-        ner_manager.build_vocab(self.train_dataset.data, is_token=False)
+        token_manager.build_vocab(self.train_dataset.data)
+        ner_manager.build_output_vocab(self.train_dataset.data)
+
+        # self.vocab_size = len(token_manager.vocab)
 
         self.val_dataset = ConllDataset(
             val_path, 
