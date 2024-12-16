@@ -7,7 +7,7 @@ class GruNER(nn.Module):
         vocab_size: int,
         hidden_size: int=128,
         embedding_size: int=256,
-        bidirectional: int=0,
+        bidirectional: int=1,
         num_classes: int=17
     ):
         super(GruNER, self).__init__()

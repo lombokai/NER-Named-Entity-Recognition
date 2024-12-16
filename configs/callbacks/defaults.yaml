@@ -1,0 +1,14 @@
+checkpoint:
+  _target_: lightning.pytorch.callbacks.ModelCheckpoint
+  monitor: val_loss
+  dirpath: logs/${task_name}/runs/${now:%Y-%m-%d}/${now:%H-%M-%S}/checkpoint/
+  filename: ner-{epoch:02d}-{val_loss:.2f}
+  save_top_k: 1
+  mode: min
+
+early_stop:
+  _target_: lightning.pytorch.callbacks.early_stopping.EarlyStopping
+  monitor: val_acc
+  mode: max
+  verbose: true
+  patience: 5

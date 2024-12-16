@@ -1,0 +1,3 @@
+_target_: ner.model.GruNER
+vocab_size: 26776
+num_classes: 10

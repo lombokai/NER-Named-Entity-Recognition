@@ -1,0 +1,14 @@
+defaults:
+  - _self_
+  - callbacks: defaults
+  - data: defaults
+  - hydra: defaults
+  - logger: defaults
+  - loss: defaults
+  - metrics: defaults
+  - model: defaults
+  - module: defaults
+  - optimizer: defaults
+  - trainer: defaults
+
+task_name: "train"
