@@ -11,18 +11,20 @@ class GruModule(L.LightningModule):
         model: DictConfig,
         loss_fn: DictConfig,
         metrics: DictConfig,
-        optimizer: DictConfig,
+        optim: DictConfig
     ):
-        super().__init__()
+        super(GruModule, self).__init__()
+        self.save_hyperparameters()
 
         self.model = instantiate(model)
         self.loss_fn = instantiate(loss_fn)
         self.metrics = instantiate(metrics)
 
-        self.optimizer = optimizer
+        self.optim = optim
 
     def forward(self, x):
-        return self.model(x)
+        out = self.model(x)
+        return out
     
     def training_step(self, batch, batch_idx):
         x, y = batch
@@ -71,9 +73,9 @@ class GruModule(L.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = instantiate(
-            self.optimizer,
+        optim = instantiate(
+            self.optim,
             params=self.parameters(),
             _convert_="partial"
         )
-        return optimizer
+        return optim
