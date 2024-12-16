@@ -1,0 +1,3 @@
+_target_: ner.data.ConllDataModule
+data_path: data/conll
+max_len: 100
