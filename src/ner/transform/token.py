@@ -1,8 +1,9 @@
+import torch
 from collections import Counter
 
 
 class Token:
-    def __init__(self, special_first=True):
+    def __init__(self, special_first=True, load_vocab_path=None):
         self.special_first = special_first
         self.token_vocab = {}
         self.reverse_token_vocab = {}
@@ -12,6 +13,9 @@ class Token:
 
         self.special_token = ["<unk>", "<pad>"]
         self.special_output = ["<pad>"]
+
+        if load_vocab_path:
+            self.load_vocab(load_vocab_path)
 
     def build_vocab(self, sentences):
         # Build vocabulary for tokens
@@ -52,3 +56,21 @@ class Token:
             return [self.reverse_token_vocab.get(idx, "<unk>") for idx in indices]
         else:
             return [self.reverse_output_vocab.get(idx, "<pad>") for idx in indices]
+
+    def save_vocab(self, path):
+        vocab_data = {
+            "token_vocab": self.token_vocab,
+            "output_vocab": self.output_vocab,
+            "vocab_size": len(self.token_vocab),
+            "output_vocab_size": len(self.output_vocab)
+        }
+        torch.save(vocab_data, path)
+
+    def load_vocab(self, file_path):
+        vocab_data = torch.load(file_path)
+
+        self.token_vocab = vocab_data["token_vocab"]
+        self.reverse_token_vocab = {idx: token for token, idx in self.token_vocab.items()}
+        self.output_vocab = vocab_data["output_vocab"]
+        self.reverse_output_vocab = {idx: token for token, idx in self.output_vocab.items()}
+        
