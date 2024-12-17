@@ -8,7 +8,7 @@ class GruNER(nn.Module):
         hidden_size: int=128,
         embedding_size: int=256,
         bidirectional: int=1,
-        num_classes: int=17
+        num_classes: int=10
     ):
         super(GruNER, self).__init__()
 
@@ -25,5 +25,9 @@ class GruNER(nn.Module):
     def forward(self, x):
         x = self.emb(x)
         x, _ = self.gru(x)
-        x = self.out_layer(x)
-        return x
+        logits = self.out_layer(x)
+
+        batch_size, seq_len, num_classes = logits.shape
+        logits = logits.view(batch_size * seq_len, num_classes)
+
+        return logits
