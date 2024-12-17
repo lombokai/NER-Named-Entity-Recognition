@@ -29,14 +29,11 @@ class GruModule(L.LightningModule):
     def training_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-
-        _, _, num_classes = logits.shape
-        logits = logits.view(-1, num_classes)
         y = y.view(-1)
 
         loss = self.loss_fn(logits, y)
 
-        y_class = F.softmax(logits, dim=-1).max(dim=1)[1]
+        y_class = logits.argmax(dim=-1)
         acc = self.metrics(y_class, y)
 
         self.log_dict({"train_loss": loss, "train_acc": acc}, prog_bar=True)
@@ -45,13 +42,11 @@ class GruModule(L.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-
-        _, _, num_classes = logits.shape
-        logits = logits.view(-1, num_classes)
         y = y.view(-1)
 
         loss = self.loss_fn(logits, y)
-        y_class = F.softmax(logits, dim=-1).max(dim=1)[1]
+
+        y_class = logits.argmax(dim=-1)
         acc = self.metrics(y_class, y)
 
         self.log_dict({"val_loss": loss, "val_acc": acc}, prog_bar=True)
@@ -60,13 +55,11 @@ class GruModule(L.LightningModule):
     def test_step(self, batch, batch_idx):
         x, y = batch
         logits = self(x)
-
-        _, _, num_classes = logits.shape
-        logits = logits.view(-1, num_classes)
         y = y.view(-1)
 
         loss = self.loss_fn(logits, y)
-        y_class = F.softmax(logits, dim=-1).max(dim=1)[1]
+
+        y_class = logits.argmax(dim=-1)
         acc = self.metrics(y_class, y)
 
         self.log_dict({"test_loss": loss, "test_acc": acc}, prog_bar=True)
