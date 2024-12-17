@@ -28,6 +28,8 @@ def cli_main(cfg):
     )
 
     trainer.fit(module, data)
+    trainer.validate(module, data)
+    trainer.test(module, data)
     
 
 if __name__ == "__main__":
