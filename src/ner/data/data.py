@@ -71,12 +71,15 @@ class ConllDataModule(L.LightningDataModule):
     def __init__(
         self, 
         data_path, 
+        vocab_dir: str="vocab.pth",
         max_len: int=100
     ):
         super().__init__()
 
         self.data_path = data_path
         self.max_len = max_len
+
+        self.vocab_dir = vocab_dir
 
     def setup(self, stage=None):
         train_path = os.path.join(self.data_path, "train.txt")
@@ -96,7 +99,7 @@ class ConllDataModule(L.LightningDataModule):
         token_manager.build_vocab(self.train_dataset.data)
         ner_manager.build_output_vocab(self.train_dataset.data)
 
-        # self.vocab_size = len(token_manager.vocab)
+        token_manager.save_vocab(self.vocab_dir)
 
         self.val_dataset = ConllDataset(
             val_path, 
