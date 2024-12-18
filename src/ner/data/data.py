@@ -10,14 +10,12 @@ class ConllDataset(Dataset):
     def __init__(
         self, 
         data_path,
-        token_manager,
-        ner_manager, 
+        token_manager, 
         max_len: int=100
     ):
         self.data_path = data_path
         self.max_len = max_len
         self.token_manager = token_manager
-        self.ner_manager = ner_manager
 
         self.data = self._load_data()
 
@@ -44,7 +42,8 @@ class ConllDataset(Dataset):
                     data_dict = {"id": idx, "tokens": [], "ner_outputs": []}
                     idx += 1
                 l = line.split()
-                data_dict["tokens"].append(f"{l[0]}_{l[1]}")
+                # data_dict["tokens"].append(f"{l[0]}_{l[1]}")
+                data_dict["tokens"].append(f"{l[0]}")
                 data_dict["ner_outputs"].append(l[3])
         return data
 
@@ -59,10 +58,10 @@ class ConllDataset(Dataset):
         sample = self.data[idx]
 
         token = self.token_manager.encode(sample["tokens"], is_token=True)
-        ner_tags = self.ner_manager.encode(sample["ner_outputs"], is_token=False)
+        ner_tags = self.token_manager.encode(sample["ner_outputs"], is_token=False)
 
         token = self._pad_sequence(token, self.token_manager.token_vocab["<pad>"])
-        ner_tags = self._pad_sequence(ner_tags, self.ner_manager.output_vocab["<pad>"])        
+        ner_tags = self._pad_sequence(ner_tags, self.token_manager.output_vocab["<pad>"])        
         
         return torch.tensor(token, dtype=torch.long), torch.tensor(ner_tags, dtype=torch.long)
         
@@ -87,30 +86,25 @@ class ConllDataModule(L.LightningDataModule):
         test_path = os.path.join(self.data_path, "test.txt")
 
         token_manager = Token()
-        ner_manager = Token()
 
         self.train_dataset = ConllDataset(
             train_path, 
-            token_manager, 
-            ner_manager, 
+            token_manager,
             self.max_len
         )
 
         token_manager.build_vocab(self.train_dataset.data)
-        ner_manager.build_output_vocab(self.train_dataset.data)
-
+        token_manager.build_output_vocab(self.train_dataset.data)
         token_manager.save_vocab(self.vocab_dir)
 
         self.val_dataset = ConllDataset(
             val_path, 
-            token_manager, 
-            ner_manager, 
+            token_manager,
             self.max_len
         )
         self.test_dataset = ConllDataset(
             test_path, 
             token_manager, 
-            ner_manager, 
             self.max_len
         )
 
