@@ -43,6 +43,9 @@ class Token:
                 sorted_outputs = sorted_outputs + self.special_output
 
         self.output_vocab = {token: idx for idx, token in enumerate(sorted_outputs)}
+
+        print(self.output_vocab)
+
         self.reverse_output_vocab = {idx: token for idx, token in enumerate(sorted_outputs)}
 
     def encode(self, tokens, is_token=True):
@@ -60,9 +63,9 @@ class Token:
     def save_vocab(self, path):
         vocab_data = {
             "token_vocab": self.token_vocab,
-            "output_vocab": self.output_vocab,
+            "output_vocab": self.reverse_output_vocab,
             "vocab_size": len(self.token_vocab),
-            "output_vocab_size": len(self.output_vocab)
+            "output_vocab_size": len(self.reverse_output_vocab)
         }
         torch.save(vocab_data, path)
 
