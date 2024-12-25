@@ -71,14 +71,14 @@ class ConllDataset(Dataset):
             self.tags_vocab = {w: i+1 for i, w in enumerate(self.tags)}
             self.tags_vocab["<pad>"] = 0
 
-            data = {
-                "token_vocab": self.token_vocab,
-                "pos_vocab": self.pos_vocab,
-                "chunk_vocab": self.chunk_vocab,
-                "tags_vocab": self.tags_vocab
-            }
+            # data = {
+            #     "token_vocab": self.token_vocab,
+            #     "pos_vocab": self.pos_vocab,
+            #     "chunk_vocab": self.chunk_vocab,
+            #     "tags_vocab": self.tags_vocab
+            # }
 
-            torch.save(data, f"{self.root_dir}/vocab.pth")
+            # torch.save(data, f"{self.root_dir}/vocab.pth")
 
     def _pad_sequence(self, sequence, pad_idx):
         sequence = sequence[:self.max_len]
