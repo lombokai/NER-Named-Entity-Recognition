@@ -60,10 +60,17 @@ class ConllDataset(Dataset):
         token = self.token_manager.encode(sample["tokens"], is_token=True)
         ner_tags = self.token_manager.encode(sample["ner_outputs"], is_token=False)
 
+        attention_mask = [1] * len(token)
+
         token = self._pad_sequence(token, self.token_manager.token_vocab["<pad>"])
         ner_tags = self._pad_sequence(ner_tags, self.token_manager.output_vocab["<pad>"])        
-        
-        return torch.tensor(token, dtype=torch.long), torch.tensor(ner_tags, dtype=torch.long)
+        attention_mask = self._pad_sequence(attention_mask, 0)
+
+        return (
+            torch.tensor(token, dtype=torch.long), 
+            torch.tensor(ner_tags, dtype=torch.long),
+            torch.tensor(attention_mask, dtype=torch.long)
+        )
         
 
 class ConllDataModule(L.LightningDataModule):

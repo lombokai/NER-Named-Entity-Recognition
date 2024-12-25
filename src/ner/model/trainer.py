@@ -27,7 +27,7 @@ class GruModule(L.LightningModule):
         return out
     
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x, y, _ = batch
         logits = self(x)
         y = y.view(-1)
 
@@ -40,7 +40,7 @@ class GruModule(L.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, y, _ = batch
         logits = self(x)
         y = y.view(-1)
 
@@ -53,7 +53,7 @@ class GruModule(L.LightningModule):
         return loss
     
     def test_step(self, batch, batch_idx):
-        x, y = batch
+        x, y, _ = batch
         logits = self(x)
         y = y.view(-1)
 

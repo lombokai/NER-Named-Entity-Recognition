@@ -11,4 +11,4 @@ early_stop:
   monitor: val_acc
   mode: max
   verbose: true
-  patience: 5
+  patience: 10

@@ -1,0 +1,5 @@
+_target_: ner.model.BERTNerModule
+model: ${model}
+loss_fn: ${loss}
+metrics: ${metrics}
+optim: ${optimizer}
