@@ -1,4 +1,4 @@
 _target_: ner.data.ConllDataModule
-root_dir: data/conll
+root_dir: /kaggle/input/conll003-englishversion
 max_len: 65
 batch_size: 32
