@@ -1,4 +1,4 @@
 _target_: ner.data.ConllDataModule
-data_path: /kaggle/working/data/conll
-vocab_dir: /kaggle/working/data/vocab.pth
-max_len: 100
+root_dir: data/conll
+max_len: 65
+batch_size: 32

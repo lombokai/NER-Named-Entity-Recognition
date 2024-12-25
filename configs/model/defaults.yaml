@@ -1,3 +1,5 @@
-_target_: ner.model.GruNER
-vocab_size: 23625
-num_classes: 10
+_target_: ner.model.BiLSTMModel
+n_words: 23624
+n_pos: 45
+n_chunks: 20
+n_tags: 9
