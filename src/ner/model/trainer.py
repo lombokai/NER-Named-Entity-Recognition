@@ -5,7 +5,7 @@ from omegaconf import DictConfig
 from hydra.utils import instantiate
 
 
-class GruModule(L.LightningModule):
+class BiLSTMModule(L.LightningModule):
     def __init__(
         self,
         model: DictConfig,
@@ -13,54 +13,66 @@ class GruModule(L.LightningModule):
         metrics: DictConfig,
         optim: DictConfig
     ):
-        super(GruModule, self).__init__()
+        super(BiLSTMModule, self).__init__()
         self.save_hyperparameters()
 
         self.model = instantiate(model)
         self.loss_fn = instantiate(loss_fn)
-        self.metrics = instantiate(metrics)
+
+        self.train_acc = instantiate(metrics)
+        self.val_acc = instantiate(metrics)
+        self.test_acc = instantiate(metrics)
 
         self.optim = optim
 
-    def forward(self, x):
-        out = self.model(x)
+    def forward(self, x1, x2, x3):
+        out = self.model(x1, x2, x3)
         return out
     
     def training_step(self, batch, batch_idx):
-        x, y, _ = batch
-        logits = self(x)
-        y = y.view(-1)
+        token, pos, chunk, tags = batch
+        logits = self(token, pos, chunk)
+        logits = logits.view(-1, logits.shape[-1])
+        y = tags.view(-1)
 
         loss = self.loss_fn(logits, y)
 
         y_class = logits.argmax(dim=-1)
-        acc = self.metrics(y_class, y)
+        # print(y_class)
+        # print(y)
+        # print()
+        acc = self.train_acc(y_class, y)
 
         self.log_dict({"train_loss": loss, "train_acc": acc}, prog_bar=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
-        x, y, _ = batch
-        logits = self(x)
-        y = y.view(-1)
+        token, pos, chunk, tags = batch
+        logits = self(token, pos, chunk)
+        logits = logits.view(-1, logits.shape[-1])
+        y = tags.view(-1)
 
         loss = self.loss_fn(logits, y)
 
         y_class = logits.argmax(dim=-1)
-        acc = self.metrics(y_class, y)
+        # print(y_class)
+        # print(y)
+        # print()
+        acc = self.val_acc(y_class, y)
 
         self.log_dict({"val_loss": loss, "val_acc": acc}, prog_bar=True)
         return loss
     
     def test_step(self, batch, batch_idx):
-        x, y, _ = batch
-        logits = self(x)
-        y = y.view(-1)
+        token, pos, chunk, tags = batch
+        logits = self(token, pos, chunk)
+        logits = logits.view(-1, logits.shape[-1])
+        y = tags.view(-1)
 
         loss = self.loss_fn(logits, y)
 
         y_class = logits.argmax(dim=-1)
-        acc = self.metrics(y_class, y)
+        acc = self.test_acc(y_class, y)
 
         self.log_dict({"test_loss": loss, "test_acc": acc}, prog_bar=True)
         return loss
