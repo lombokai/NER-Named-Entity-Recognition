@@ -1,0 +1,2 @@
+_target_: ner.model.BERTNer
+num_classes: 10

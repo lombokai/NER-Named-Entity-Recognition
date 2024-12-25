@@ -44,8 +44,6 @@ class Token:
 
         self.output_vocab = {token: idx for idx, token in enumerate(sorted_outputs)}
 
-        print(self.output_vocab)
-
         self.reverse_output_vocab = {idx: token for idx, token in enumerate(sorted_outputs)}
 
     def encode(self, tokens, is_token=True):
