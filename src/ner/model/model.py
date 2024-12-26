@@ -86,7 +86,7 @@ class BiLSTMModel(nn.Module):
             batch_first=True,
             dropout=0.5,
         )
-        self.output_layer = nn.Linear(200 * 2, n_tags + 1)
+        self.output_layer = nn.Linear(200 * 2, n_tags)
         nn.init.xavier_uniform(self.output_layer.weight)
 
     def forward(self, word_input, pos_input, chunk_input):
