@@ -1,3 +1,4 @@
 _target_: torchmetrics.Accuracy
 task: multiclass
 num_classes: 10
+ignore_index: 0
