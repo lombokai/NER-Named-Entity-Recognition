@@ -1,4 +1,24 @@
-_target_: torchmetrics.Accuracy
-task: multiclass
-num_classes: 10
-ignore_index: 0
+accuracy:
+  _target_: torchmetrics.Accuracy
+  task: multiclass
+  num_classes: 10
+  ignore_index: 0
+
+f1:
+  _target_: torchmetrics.F1Score
+  task: multiclass
+  num_classes: 10
+  ignore_index: 0
+
+precision:
+  _target_: torchmetrics.Precision
+  task: multiclass
+  num_classes: 10
+  ignore_index: 0
+
+recall:
+  _target_: torchmetrics.Recall
+  task: multiclass
+  num_classes: 10
+  ignore_index: 0
+  
