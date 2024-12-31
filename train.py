@@ -20,11 +20,12 @@ def cli_main(cfg):
 
     mlflow_logger = instantiate(cfg.logger.mlflow_logger)
     tensorboard_logger = instantiate(cfg.logger.tensorboard_logger)
+    wandb_logger = instantiate(cfg.logger.wandb_logger)
 
     trainer: L.Trainer = instantiate(
         cfg.trainer,
         callbacks=[checkpoint, early_stop],
-        logger=[mlflow_logger, tensorboard_logger]
+        logger=[mlflow_logger, tensorboard_logger, wandb_logger]
     )
 
     trainer.fit(module, data)
