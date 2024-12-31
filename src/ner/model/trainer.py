@@ -38,9 +38,6 @@ class BiLSTMModule(L.LightningModule):
         loss = self.loss_fn(logits, y)
 
         y_class = logits.argmax(dim=-1)
-        # print(y_class)
-        # print(y)
-        # print()
         acc = self.train_acc(y_class, y)
 
         self.log_dict({"train_loss": loss, "train_acc": acc}, prog_bar=True)
