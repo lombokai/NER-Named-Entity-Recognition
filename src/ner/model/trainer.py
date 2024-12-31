@@ -100,9 +100,20 @@ class BiLSTMModule(L.LightningModule):
         loss = self.loss_fn(logits, y)
 
         y_class = logits.argmax(dim=-1)
-        acc = self.test_acc(y_class, y)
 
-        self.log_dict({"test_loss": loss, "test_acc": acc}, prog_bar=True)
+        acc = self.acc(y_class, y)
+        f1 = self.f1score(y_class, y)
+        prec = self.precision(y_class, y)
+        rec = self.recall(y_class, y)
+
+        self.log_dict({
+            "test_loss": loss,
+            "test_acc": acc,
+            "test_f1": f1,
+            "test_prec": prec,
+            "test_rec": rec
+        }, prog_bar=True)
+
         return loss
 
     def configure_optimizers(self):
