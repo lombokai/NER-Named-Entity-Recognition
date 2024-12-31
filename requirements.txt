@@ -11,6 +11,7 @@ torchtext==0.15.2
 lightning
 hydra-core
 
+wandb
 mlflow
 tensorboard
 
