@@ -64,6 +64,8 @@ class BiLSTMModule(L.LightningModule):
 
         loss = self.loss_fn(logits, y)
 
+        self.log_dict({"val_loss": loss}, prog_bar=True)
+
         self.acc.update(y_class, y)
         self.f1score.update(y_class, y)
         self.precision.update(y_class, y)
