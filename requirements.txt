@@ -7,7 +7,7 @@ scikit-learn
 nltk
 
 torch==2.0.1
-torchtext==0.15.2
+# torchtext==0.15.2
 lightning
 hydra-core
 
@@ -15,5 +15,5 @@ wandb
 mlflow
 tensorboard
 
-transformers[torch]
-datasets
+# transformers[torch]
+# datasets

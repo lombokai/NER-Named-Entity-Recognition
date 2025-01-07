@@ -1,3 +1,2 @@
-_target_: ner.loss.SparseCategoricalCrossentropy
-reduction: mean
+_target_: torch.nn.CrossEntropyLoss
 ignore_index: 0
