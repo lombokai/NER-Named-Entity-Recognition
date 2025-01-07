@@ -1,4 +1,4 @@
-_target_: ner.model.BERTNerModule
+_target_: ner.module.BERTModule
 model: ${model}
 loss_fn: ${loss}
 metrics: ${metrics}
