@@ -7,7 +7,7 @@ defaults:
   - loss: defaults
   - metrics: defaults
   - model: bert
-  - module: defaults
+  - module: bert
   - optimizer: defaults
   - trainer: defaults
 
