@@ -1,2 +1,6 @@
-_target_: ner.model.BERTNer
+_target_: ner.model.BERT
+vocab_size: 23625
+hidden: 768
+n_layers: 12
+attn_heads: 12
 num_classes: 10
