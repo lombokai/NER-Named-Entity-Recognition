@@ -1,3 +1,4 @@
+import torch
 import lightning as L
 import torch.nn.functional as F
 
@@ -5,7 +6,7 @@ from omegaconf import DictConfig
 from hydra.utils import instantiate
 
 
-class BiLSTMModule(L.LightningModule):
+class BERTModule(L.LightningModule):
     def __init__(
         self,
         model: DictConfig,
@@ -13,7 +14,7 @@ class BiLSTMModule(L.LightningModule):
         metrics: DictConfig,
         optim: DictConfig
     ):
-        super(BiLSTMModule, self).__init__()
+        super(BERTModule, self).__init__()
         self.save_hyperparameters()
 
         self.model = instantiate(model)
@@ -31,8 +32,8 @@ class BiLSTMModule(L.LightningModule):
         return out
     
     def training_step(self, batch, batch_idx):
-        token, pos, chunk, tags = batch
-        logits = self(token, pos, chunk)
+        token, _, _, tags = batch
+        logits = self(token, torch.zeros_like(token))
         logits = logits.view(-1, logits.shape[-1])
 
         y_class = logits.argmax(dim=-1)
@@ -55,8 +56,8 @@ class BiLSTMModule(L.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
-        token, pos, chunk, tags = batch
-        logits = self(token, pos, chunk)
+        token, _, _, tags = batch
+        logits = self(token, torch.zeros_like(token))
         logits = logits.view(-1, logits.shape[-1])
 
         y = tags.view(-1)
@@ -92,8 +93,8 @@ class BiLSTMModule(L.LightningModule):
         self.recall.reset()
     
     def test_step(self, batch, batch_idx):
-        token, pos, chunk, tags = batch
-        logits = self(token, pos, chunk)
+        token, _, _, tags = batch
+        logits = self(token, torch.zeros_like(token))
         logits = logits.view(-1, logits.shape[-1])
         y = tags.view(-1)
 

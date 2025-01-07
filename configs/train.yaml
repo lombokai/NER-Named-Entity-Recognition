@@ -6,7 +6,7 @@ defaults:
   - logger: defaults
   - loss: defaults
   - metrics: defaults
-  - model: defaults
+  - model: bert
   - module: defaults
   - optimizer: defaults
   - trainer: defaults
