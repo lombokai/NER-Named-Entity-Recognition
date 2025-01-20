@@ -12,4 +12,4 @@ tensorboard_logger:
 wandb_logger:
   _target_: lightning.pytorch.loggers.wandb.WandbLogger
   project: ner
-  name: bilstm
+  name: bert

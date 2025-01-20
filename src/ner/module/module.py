@@ -27,8 +27,8 @@ class BERTModule(L.LightningModule):
 
         self.optim = optim
 
-    def forward(self, x1, x2, x3):
-        out = self.model(x1, x2, x3)
+    def forward(self, x, segment):
+        out = self.model(x, segment)
         return out
     
     def training_step(self, batch, batch_idx):
