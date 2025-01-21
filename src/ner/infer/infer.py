@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+from torch.nn.utils.rnn import pad_sequence
 
 from ner.model import BERT
 
@@ -51,9 +52,13 @@ class NERInfer:
         else:
             raise ValueError("Input text must be a string or a list of sentences.")
 
+        print(tokenized)
+
         # Convert to tensor
         if isinstance(tokenized[0], list):  # Batch input
-            return torch.tensor(tokenized, dtype=torch.long, device=self.device)
+            tokenized = [torch.tensor(token, dtype=torch.long, device=self.device) for token in tokenized]
+            padded = pad_sequence(tokenized, batch_first=True, padding_value=self.token_vocab["<pad>"])
+            return padded
         else:  # Single input
             return torch.tensor([tokenized], dtype=torch.long, device=self.device)
 
